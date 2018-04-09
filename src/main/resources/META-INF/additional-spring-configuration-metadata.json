@@ -1,0 +1,47 @@
+{
+	"groups": [],
+	"properties": [
+		{
+			"name": "embedded.container.mysql.enabled",
+			"type": "java.lang.Boolean",
+			"description": "Enables/Disables container startup.",
+			"defaultValue": "true"
+		},
+		{
+			"name": "embedded.container.mysql.startup-timeout",
+			"type": "java.lang.Integer",
+			"description": "Max time to wait for a successfully started container",
+			"defaultValue": "30"
+		},
+		{
+			"name": "embedded.container.mysql.docker-image",
+			"type": "java.lang.String",
+			"description": "Docker-image",
+			"defaultValue": "mysql:5.7.17"
+		},
+		{
+			"name": "embedded.container.mysql.port",
+			"type": "java.lang.String",
+			"description": "Port",
+			"defaultValue": "3306"
+		},
+		{
+			"name": "embedded.container.mysql.root-password",
+			"type": "java.lang.String",
+			"description": "Root-password",
+			"defaultValue": "root"
+		},		
+		{
+			"name": "embedded.container.mysql.database-name",
+			"type": "java.lang.String",
+			"description": "Database-name",
+			"defaultValue": "embeddedMySqlDb"
+		},
+		{
+			"name": "embedded.container.mysql.database-charset",
+			"type": "java.lang.String",
+			"description": "Database-charset",
+			"defaultValue": "utf8mb4"
+		}
+	]
+}
