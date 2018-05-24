@@ -5,7 +5,7 @@
   <name>springboot-testcontainer-mysql</name>
   <description>MySQL test-container</description>
   <url>https://github.com/springboot-testcontainer/springboot-testcontainer-mysql</url>
-  <version>0.1.0-RC1</version>
+  <version>0.1.0-RC2</version>
 
   <properties>
     <!-- System -->
@@ -16,7 +16,7 @@
     <!-- Testing -->
     <jacoco.version>0.8.1</jacoco.version>
     <powermock.version>1.7.3</powermock.version>
-    <easymock.version>3.5.1</easymock.version>
+    <easymock.version>3.6</easymock.version>
     <!-- Build -->
     <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
     <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
@@ -30,8 +30,8 @@
     <github-release-plugin.version>1.2.0</github-release-plugin.version>
     <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
     <!-- Other -->
-    <spring.version>5.0.4.RELEASE</spring.version>
-    <spring-boot.version>2.0.0.RELEASE</spring-boot.version>
+    <spring.version>5.0.6.RELEASE</spring.version>
+    <spring-boot.version>2.0.2.RELEASE</spring-boot.version>
   </properties>
 
   <repositories>
@@ -52,7 +52,7 @@
     <dependency>
       <groupId>com.avides.springboot.testcontainer</groupId>
       <artifactId>springboot-testcontainer-common</artifactId>
-      <version>0.1.0-RC2</version>
+      <version>0.1.0-RC3</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
