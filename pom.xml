@@ -5,7 +5,7 @@
   <name>springboot-testcontainer-mysql</name>
   <description>MySQL test-container</description>
   <url>https://github.com/springboot-testcontainer/springboot-testcontainer-mysql</url>
-  <version>0.1.0-RC2</version>
+  <version>0.1.0-RC3</version>
 
   <properties>
     <!-- System -->
@@ -39,6 +39,10 @@
       <id>spring-milestones</id>
       <url>https://repo.spring.io/libs-milestone</url>
     </repository>
+    <repository>
+      <id>sonatype-oss</id>
+      <url>https://oss.sonatype.org/content/repositories/releases</url>
+    </repository>
   </repositories>
 
   <dependencies>
@@ -46,13 +50,13 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.16.20</version>
+      <version>1.16.22</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.avides.springboot.testcontainer</groupId>
       <artifactId>springboot-testcontainer-common</artifactId>
-      <version>0.1.0-RC3</version>
+      <version>0.1.0-RC4</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -77,7 +81,7 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.9.1</version>
+      <version>3.10.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
