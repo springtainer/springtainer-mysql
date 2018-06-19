@@ -5,7 +5,7 @@
   <name>springboot-testcontainer-mysql</name>
   <description>MySQL test-container</description>
   <url>https://github.com/springboot-testcontainer/springboot-testcontainer-mysql</url>
-  <version>0.1.0-RC3</version>
+  <version>0.1.0-RC4</version>
 
   <properties>
     <!-- System -->
@@ -20,25 +20,21 @@
     <!-- Build -->
     <maven-compiler-plugin.version>3.7.0</maven-compiler-plugin.version>
     <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
-    <maven-javadoc-plugin.version>2.10.4</maven-javadoc-plugin.version>
+    <maven-javadoc-plugin.version>3.0.1</maven-javadoc-plugin.version>
     <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
-    <maven-surefire-plugin.version>2.20.1</maven-surefire-plugin.version>
-    <maven-failsafe-plugin.version>2.20.1</maven-failsafe-plugin.version>
+    <maven-surefire-plugin.version>2.22.0</maven-surefire-plugin.version>
+    <maven-failsafe-plugin.version>2.22.0</maven-failsafe-plugin.version>
     <coveralls.version>4.3.0</coveralls.version>
     <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
-    <maven-scm-provider-gitexe.version>1.9.5</maven-scm-provider-gitexe.version>
+    <maven-scm-provider-gitexe.version>1.10.0</maven-scm-provider-gitexe.version>
     <github-release-plugin.version>1.2.0</github-release-plugin.version>
     <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
     <!-- Other -->
-    <spring.version>5.0.6.RELEASE</spring.version>
-    <spring-boot.version>2.0.2.RELEASE</spring-boot.version>
+    <spring.version>5.0.7.RELEASE</spring.version>
+    <spring-boot.version>2.0.3.RELEASE</spring-boot.version>
   </properties>
 
   <repositories>
-    <repository>
-      <id>spring-milestones</id>
-      <url>https://repo.spring.io/libs-milestone</url>
-    </repository>
     <repository>
       <id>sonatype-oss</id>
       <url>https://oss.sonatype.org/content/repositories/releases</url>
@@ -50,13 +46,13 @@
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
-      <version>1.16.22</version>
+      <version>1.18.0</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.avides.springboot.testcontainer</groupId>
       <artifactId>springboot-testcontainer-common</artifactId>
-      <version>0.1.0-RC4</version>
+      <version>0.1.0-RC6</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
