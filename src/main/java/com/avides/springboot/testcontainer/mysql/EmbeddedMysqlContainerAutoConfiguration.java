@@ -2,6 +2,9 @@ package com.avides.springboot.testcontainer.mysql;
 
 import static com.avides.springboot.testcontainer.mysql.MysqlProperties.BEAN_NAME;
 
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.attribute.PosixFilePermission;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
@@ -10,6 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -22,6 +26,8 @@ import org.springframework.core.env.ConfigurableEnvironment;
 
 import com.avides.springboot.testcontainer.common.container.AbstractBuildingEmbeddedContainer;
 import com.avides.springboot.testcontainer.common.container.EmbeddedContainer;
+import com.github.dockerjava.api.command.CreateContainerCmd;
+import com.github.dockerjava.api.model.Bind;
 
 import lombok.SneakyThrows;
 
@@ -64,6 +70,27 @@ public class EmbeddedMysqlContainerAutoConfiguration
             provided.put("embedded.container.mysql.database-name", properties.getDatabaseName());
             provided.put("embedded.container.mysql.database-charset", properties.getDatabaseCharset());
             return provided;
+        }
+
+        /**
+         * Skip ssl-key creation which reduces io and startup-time
+         * <p>
+         * Better solution: https://github.com/docker-library/mysql/pull/428
+         */
+        @SneakyThrows
+        @Override
+        protected void adjustCreateCommand(CreateContainerCmd createContainerCmd)
+        {
+            File emptyFile = File.createTempFile("abc", "xyz");
+            emptyFile.deleteOnExit();
+
+            Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(emptyFile.toPath());
+            permissions.add(PosixFilePermission.OWNER_EXECUTE);
+            permissions.add(PosixFilePermission.GROUP_EXECUTE);
+            permissions.add(PosixFilePermission.OTHERS_EXECUTE);
+            Files.setPosixFilePermissions(emptyFile.toPath(), permissions);
+
+            createContainerCmd.withBinds(Bind.parse(emptyFile.getAbsolutePath() + ":/usr/bin/mysql_ssl_rsa_setup:ro"));
         }
 
         @SneakyThrows
