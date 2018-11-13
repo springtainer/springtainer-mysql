@@ -5,7 +5,7 @@
   <name>springboot-testcontainer-mysql</name>
   <description>MySQL test-container</description>
   <url>https://github.com/springboot-testcontainer/springboot-testcontainer-mysql</url>
-  <version>0.1.0-RC5</version>
+  <version>0.1.0-RC6</version>
 
   <properties>
     <!-- System -->
@@ -15,7 +15,7 @@
     <java.version>1.8</java.version>
     <!-- Testing -->
     <jacoco.version>0.8.2</jacoco.version>
-    <powermock.version>1.7.4</powermock.version>
+    <powermock.version>2.0.0-RC.3</powermock.version>
     <easymock.version>4.0.1</easymock.version>
     <!-- Build -->
     <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
@@ -24,12 +24,11 @@
     <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>2.22.1</maven-failsafe-plugin.version>
-    <coveralls.version>4.3.0</coveralls.version>
     <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
     <maven-scm-provider-gitexe.version>1.11.1</maven-scm-provider-gitexe.version>
-    <github-release-plugin.version>1.2.0</github-release-plugin.version>
+    <github-release-plugin.version>1.3.0</github-release-plugin.version>
     <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
-    <!-- Other -->
+    <!-- Spring -->
     <spring.version>5.0.10.RELEASE</spring.version>
     <spring-boot.version>2.0.6.RELEASE</spring-boot.version>
   </properties>
@@ -52,13 +51,13 @@
     <dependency>
       <groupId>com.avides.springboot.testcontainer</groupId>
       <artifactId>springboot-testcontainer-common</artifactId>
-      <version>0.1.0-RC7</version>
+      <version>0.1.0-RC10</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-configuration-processor</artifactId>
+      <artifactId>spring-boot-autoconfigure</artifactId>
       <version>${spring-boot.version}</version>
-      <optional>true</optional>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -258,6 +257,21 @@
             <goals>
               <goal>report</goal>
             </goals>
+            <configuration>
+              <dataFile>target/jacoco-ut.exec</dataFile>
+              <outputDirectory>target/jacoco-ut</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>integration-test-report</id>
+            <phase>post-integration-test</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <dataFile>target/jacoco-it.exec</dataFile>
+              <outputDirectory>target/jacoco-it</outputDirectory>
+            </configuration>
           </execution>
           <execution>
             <id>agent</id>
@@ -265,12 +279,36 @@
               <goal>prepare-agent</goal>
             </goals>
           </execution>
+          <execution>
+            <id>merge-results</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>merge</goal>
+            </goals>
+            <configuration>
+              <fileSets>
+                <fileSet>
+                  <directory>target</directory>
+                  <includes>
+                    <include>*.exec</include>
+                  </includes>
+                </fileSet>
+              </fileSets>
+              <destFile>target/jacoco.exec</destFile>
+            </configuration>
+          </execution>
+          <execution>
+            <id>post-merge-report</id>
+            <phase>verify</phase>
+            <goals>
+              <goal>report</goal>
+            </goals>
+            <configuration>
+              <dataFile>target/jacoco.exec</dataFile>
+              <outputDirectory>target/site/jacoco</outputDirectory>
+            </configuration>
+          </execution>
         </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.eluder.coveralls</groupId>
-        <artifactId>coveralls-maven-plugin</artifactId>
-        <version>${coveralls.version}</version>
       </plugin>
       <!-- DEPLOYMENT -->
       <plugin>
