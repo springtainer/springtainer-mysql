@@ -7,20 +7,16 @@ language: java
 
 jdk:
   - oraclejdk8
+  - oraclejdk11  
 
 cache:
   directories:
   - $HOME/.m2
 
-before_install:
-  - wget -O ~/codacy-coverage-reporter-assembly.jar https://oss.sonatype.org/service/local/repositories/releases/content/com/codacy/codacy-coverage-reporter/4.0.0/codacy-coverage-reporter-4.0.0-assembly.jar
-
-install: 
-  - mvn clean compile
-
-script: 
-  - mvn verify -Dgpg.skip=true
+install: mvn verify -Dgpg.skip=true
   
+before_install:
+  - wget -O ~/codacy-coverage-reporter-assembly.jar https://github.com/codacy/codacy-coverage-reporter/releases/download/4.0.5/codacy-coverage-reporter-4.0.5-assembly.jar
+
 after_success:
-  - mvn coveralls:report
   - java -jar ~/codacy-coverage-reporter-assembly.jar report -l Java -r target/site/jacoco/jacoco.xml
