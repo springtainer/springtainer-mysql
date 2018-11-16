@@ -4,7 +4,7 @@ pipeline
 
     environment
     {
-        deploymentBranch = "master"
+        deploymentBranch = "PR-7"
         mavenExecutable = "mvn-jdk8"
     }
 
