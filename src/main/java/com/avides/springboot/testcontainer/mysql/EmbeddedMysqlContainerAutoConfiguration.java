@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,6 +52,12 @@ public class EmbeddedMysqlContainerAutoConfiguration
             List<String> envs = new ArrayList<>();
             envs.add("MYSQL_ROOT_PASSWORD=" + properties.getRootPassword());
             return envs;
+        }
+
+        @Override
+        protected List<String> getTmpDirectories()
+        {
+            return Collections.singletonList("/var/lib/mysql");
         }
 
         @Override
