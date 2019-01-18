@@ -5,7 +5,7 @@
   <name>springboot-testcontainer-mysql</name>
   <description>MySQL test-container</description>
   <url>https://github.com/springboot-testcontainer/springboot-testcontainer-mysql</url>
-  <version>0.1.0-RC7</version>
+  <version>0.1.0-RC8</version>
 
   <properties>
     <!-- System -->
@@ -15,8 +15,8 @@
     <java.version>1.8</java.version>
     <!-- Testing -->
     <jacoco.version>0.8.2</jacoco.version>
-    <powermock.version>2.0.0-RC.3</powermock.version>
-    <easymock.version>4.0.1</easymock.version>
+    <powermock.version>2.0.0</powermock.version>
+    <easymock.version>4.0.2</easymock.version>
     <!-- Build -->
     <maven-compiler-plugin.version>3.8.0</maven-compiler-plugin.version>
     <maven-source-plugin.version>3.0.1</maven-source-plugin.version>
@@ -24,13 +24,15 @@
     <maven-gpg-plugin.version>1.6</maven-gpg-plugin.version>
     <maven-surefire-plugin.version>2.22.1</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>2.22.1</maven-failsafe-plugin.version>
+    <maven-enforcer-plugin.version>3.0.0-M2</maven-enforcer-plugin.version>
     <maven-release-plugin.version>2.5.3</maven-release-plugin.version>
     <maven-scm-provider-gitexe.version>1.11.1</maven-scm-provider-gitexe.version>
-    <github-release-plugin.version>1.3.0</github-release-plugin.version>
+    <exists-maven-plugin.version>0.0.6</exists-maven-plugin.version>
+    <github-release-plugin.version>1.2.0</github-release-plugin.version>
     <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
     <!-- Spring -->
-    <spring.version>5.0.10.RELEASE</spring.version>
-    <spring-boot.version>2.0.6.RELEASE</spring-boot.version>
+    <spring.version>5.1.4.RELEASE</spring.version>
+    <spring-boot.version>2.1.2.RELEASE</spring-boot.version>
   </properties>
 
   <repositories>
@@ -51,7 +53,7 @@
     <dependency>
       <groupId>com.avides.springboot.testcontainer</groupId>
       <artifactId>springboot-testcontainer-common</artifactId>
-      <version>0.1.0-RC10</version>
+      <version>0.1.0-RC12</version>
     </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
@@ -173,6 +175,10 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven-javadoc-plugin.version}</version>
+        <configuration>
+          <!-- Fix for https://bugs.openjdk.java.net/browse/JDK-8212233 -->
+          <failOnError>false</failOnError>
+        </configuration>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -329,6 +335,22 @@
         </dependencies>
       </plugin>
       <plugin>
+        <groupId>org.honton.chas</groupId>
+        <artifactId>exists-maven-plugin</artifactId>
+        <version>${exists-maven-plugin.version}</version>
+        <configuration>
+          <property>skip-deploy-to-central</property>
+          <repository>https://oss.sonatype.org/content/repositories/releases/</repository>
+        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>remote</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
         <groupId>de.jutzig</groupId>
         <artifactId>github-release-plugin</artifactId>
         <version>${github-release-plugin.version}</version>
@@ -356,6 +378,7 @@
           <serverId>ossrh</serverId>
           <nexusUrl>https://oss.sonatype.org/</nexusUrl>
           <autoReleaseAfterClose>true</autoReleaseAfterClose>
+          <skipRemoteStaging>${skip-deploy-to-central}</skipRemoteStaging>
         </configuration>
       </plugin>
     </plugins>
