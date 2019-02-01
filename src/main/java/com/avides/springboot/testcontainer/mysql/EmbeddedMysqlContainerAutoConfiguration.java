@@ -23,6 +23,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 
 import com.avides.springboot.testcontainer.common.container.AbstractBuildingEmbeddedContainer;
 import com.avides.springboot.testcontainer.common.container.EmbeddedContainer;
+import com.github.dockerjava.api.command.CreateContainerCmd;
 
 import lombok.SneakyThrows;
 
@@ -71,6 +72,20 @@ public class EmbeddedMysqlContainerAutoConfiguration
             provided.put("embedded.container.mysql.database-name", properties.getDatabaseName());
             provided.put("embedded.container.mysql.database-charset", properties.getDatabaseCharset());
             return provided;
+        }
+
+        @Override
+        protected void adjustCreateCommand(CreateContainerCmd createContainerCmd)
+        {
+            List<String> commands = new ArrayList<>();
+            // performance tweaks
+            commands.add("--skip-log-bin");
+            commands.add("--sync_binlog=0");
+            commands.add("--innodb_flush_log_at_trx_commit=2");
+            commands.add("--innodb_flush_method=O_DIRECT");
+            // legacy support for mysql 8.X
+            commands.add("--default-authentication-plugin=mysql_native_password");
+            createContainerCmd.withCmd(commands);
         }
 
         /**

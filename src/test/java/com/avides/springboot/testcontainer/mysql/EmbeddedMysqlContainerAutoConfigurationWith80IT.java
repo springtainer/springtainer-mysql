@@ -7,8 +7,10 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.TestPropertySource;
 
-public class EmbeddedMysqlContainerAutoConfigurationIT extends AbstractIT
+@TestPropertySource(properties = "embedded.container.mysql.docker-image=mysql:8.0.14")
+public class EmbeddedMysqlContainerAutoConfigurationWith80IT extends AbstractIT
 {
     @Test
     public void testGeneratedProperties()
@@ -38,6 +40,12 @@ public class EmbeddedMysqlContainerAutoConfigurationIT extends AbstractIT
         String createdDatabaseCharset = environment.getProperty("embedded.container.mysql.database-charset");
         jdbcTemplate.update("USE " + createdDatabase);
         assertEquals(createdDatabaseCharset, jdbcTemplate.queryForObject("SELECT @@character_set_database;", String.class));
+    }
+
+    @Test
+    public void testCheckVersion()
+    {
+        assertThat(jdbcTemplate.queryForObject("SELECT @@version", String.class)).startsWith("8.");
     }
 
     @Configuration
