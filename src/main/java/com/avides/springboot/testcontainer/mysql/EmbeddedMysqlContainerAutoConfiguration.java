@@ -7,7 +7,6 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -78,7 +77,15 @@ public class EmbeddedMysqlContainerAutoConfiguration
         @Override
         protected void adjustCreateCommand(CreateContainerCmd createContainerCmd)
         {
-            createContainerCmd.withCmd(Arrays.asList("--default-authentication-plugin=mysql_native_password"));
+            List<String> commands = new ArrayList<>();
+            // performance tweaks
+            commands.add("--skip-log-bin");
+            commands.add("--sync_binlog=0");
+            commands.add("--innodb_flush_log_at_trx_commit=2");
+            commands.add("--innodb_flush_method=O_DIRECT");
+            // legacy support for mysql 8.X
+            commands.add("--default-authentication-plugin=mysql_native_password");
+            createContainerCmd.withCmd(commands);
         }
 
         /**
