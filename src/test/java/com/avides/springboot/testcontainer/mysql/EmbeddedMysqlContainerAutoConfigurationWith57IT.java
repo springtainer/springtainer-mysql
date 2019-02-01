@@ -42,6 +42,12 @@ public class EmbeddedMysqlContainerAutoConfigurationWith57IT extends AbstractIT
         assertEquals(createdDatabaseCharset, jdbcTemplate.queryForObject("SELECT @@character_set_database;", String.class));
     }
 
+    @Test
+    public void testCheckVersion()
+    {
+        assertThat(jdbcTemplate.queryForObject("SELECT @@version", String.class)).startsWith("5.");
+    }
+
     @Configuration
     @EnableAutoConfiguration
     static class TestConfiguration
