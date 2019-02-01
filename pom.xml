@@ -5,7 +5,7 @@
   <name>springboot-testcontainer-mysql</name>
   <description>MySQL test-container</description>
   <url>https://github.com/springboot-testcontainer/springboot-testcontainer-mysql</url>
-  <version>0.1.0-RC8</version>
+  <version>0.1.0-RC9</version>
 
   <properties>
     <!-- System -->

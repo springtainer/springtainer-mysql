@@ -7,8 +7,10 @@ import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.test.context.TestPropertySource;
 
-public class EmbeddedMysqlContainerAutoConfigurationIT extends AbstractIT
+@TestPropertySource(properties = "embedded.container.mysql.docker-image=mysql:5.7.24")
+public class EmbeddedMysqlContainerAutoConfigurationWith57IT extends AbstractIT
 {
     @Test
     public void testGeneratedProperties()

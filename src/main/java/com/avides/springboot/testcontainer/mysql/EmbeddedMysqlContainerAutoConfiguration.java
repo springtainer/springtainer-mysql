@@ -7,6 +7,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.springframework.core.env.ConfigurableEnvironment;
 
 import com.avides.springboot.testcontainer.common.container.AbstractBuildingEmbeddedContainer;
 import com.avides.springboot.testcontainer.common.container.EmbeddedContainer;
+import com.github.dockerjava.api.command.CreateContainerCmd;
 
 import lombok.SneakyThrows;
 
@@ -71,6 +73,12 @@ public class EmbeddedMysqlContainerAutoConfiguration
             provided.put("embedded.container.mysql.database-name", properties.getDatabaseName());
             provided.put("embedded.container.mysql.database-charset", properties.getDatabaseCharset());
             return provided;
+        }
+
+        @Override
+        protected void adjustCreateCommand(CreateContainerCmd createContainerCmd)
+        {
+            createContainerCmd.withCmd(Arrays.asList("--default-authentication-plugin=mysql_native_password"));
         }
 
         /**
