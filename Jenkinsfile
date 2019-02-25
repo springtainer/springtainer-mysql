@@ -42,8 +42,6 @@ pipeline
 
         stage('Integration-Tests')
         {
-            when { branch "${env.deploymentBranch}" }
-
             steps
             {
                 sh '${mavenExecutable} failsafe:integration-test failsafe:verify'
