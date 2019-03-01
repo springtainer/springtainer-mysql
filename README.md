@@ -11,7 +11,7 @@ springboot-testcontainer-mysql
 <dependency>
 	<groupId>com.avides.springboot.testcontainer</groupId>
 	<artifactId>springboot-testcontainer-mysql</artifactId>
-	<version>0.1.0-RC10</version>
+	<version>0.1.0-RC11</version>
 	<scope>test</scope>
 </dependency>
 ```
