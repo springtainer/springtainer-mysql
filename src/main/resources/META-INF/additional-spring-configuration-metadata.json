@@ -17,7 +17,7 @@
 			"name": "embedded.container.mysql.docker-image",
 			"type": "java.lang.String",
 			"description": "Docker-image",
-			"defaultValue": "mysql:5.7.22"
+			"defaultValue": "mysql:8.0.18"
 		},
 		{
 			"name": "embedded.container.mysql.port",
