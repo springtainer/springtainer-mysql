@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.TestPropertySource;
 
-@TestPropertySource(properties = "embedded.container.mysql.docker-image=mysql:5.7.24")
+@TestPropertySource(properties = "embedded.container.mysql.docker-image=mysql:8.0.18")
 public class EmbeddedMysqlContainerAutoConfigurationWith57IT extends AbstractIT
 {
     @Test
@@ -45,7 +45,7 @@ public class EmbeddedMysqlContainerAutoConfigurationWith57IT extends AbstractIT
     @Test
     public void testCheckVersion()
     {
-        assertThat(jdbcTemplate.queryForObject("SELECT @@version", String.class)).startsWith("5.");
+        assertThat(jdbcTemplate.queryForObject("SELECT @@version", String.class)).startsWith("8.");
     }
 
     @Configuration

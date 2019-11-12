@@ -1,0 +1,45 @@
+name: nightly
+
+on:
+  schedule:
+    - cron: 0 0 * * *
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: setup-java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - uses: actions/checkout@v1
+
+      - name: caching
+        uses: actions/cache@v1
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: ${{ runner.os }}-maven-
+
+      - name: compile
+        run: mvn clean compile test-compile
+
+      - name: unit-tests
+        run: mvn surefire:test
+
+      - name: integration-tests
+        run: mvn jacoco:restore-instrumented-classes failsafe:integration-test failsafe:verify
+
+      - name: sonar-analyse
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          export SONAR_ORGANIZATION=$(echo ${GITHUB_REPOSITORY} | cut -d / -f 1)
+          mvn sonar:sonar \
+            -Dsonar.host.url=https://sonarcloud.io/ \
+            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.organization=${SONAR_ORGANIZATION} \
+            -Dsonar.projectKey=${GITHUB_REPOSITORY//\//_} \
+            -Dsonar.java.binaries=./target/classes
