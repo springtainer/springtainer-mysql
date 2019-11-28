@@ -1,10 +1,8 @@
 name: review
 
 on:
-  push:
-    branches:
-      - '*'
-      - '!master'
+  pull_request:
+    types: [opened, synchronize]
 
 jobs:
   build:
@@ -33,18 +31,20 @@ jobs:
         run: mvn surefire:test
 
       - name: integration-tests
-        run: mvn jacoco:restore-instrumented-classes failsafe:integration-test failsafe:verify
+        run: mvn -DskipUTs -Dgpg.skip=true jacoco:restore-instrumented-classes verify
 
       - name: sonar-analyse
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+          export GITHUB_PULL_REQUEST=$(cut -d / -f 3 <(echo ${GITHUB_REF}))
           export SONAR_ORGANIZATION=$(echo ${GITHUB_REPOSITORY} | cut -d / -f 1)
           mvn sonar:sonar \
             -Dsonar.host.url=https://sonarcloud.io/ \
             -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
             -Dsonar.organization=${SONAR_ORGANIZATION} \
             -Dsonar.projectKey=${GITHUB_REPOSITORY//\//_} \
+            -Dsonar.pullrequest.key=${GITHUB_PULL_REQUEST} \
             -Dsonar.java.binaries=./target/classes
 
       - name: pom-analyse

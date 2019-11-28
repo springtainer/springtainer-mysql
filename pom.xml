@@ -3,7 +3,7 @@
 
   <groupId>com.avides.springboot.testcontainer</groupId>
   <artifactId>springboot-testcontainer-mysql</artifactId>
-  <version>1.0.0-RC1</version>
+  <version>1.0.0-RC2</version>
 
   <name>springboot-testcontainer-mysql</name>
   <description>MySQL test-container</description>
@@ -59,7 +59,7 @@
     <spring.version>5.2.1.RELEASE</spring.version>
     <spring-boot.version>2.2.1.RELEASE</spring-boot.version>
     <!-- Other -->
-    <springboot-testcontainer-common.version>1.0.0-RC1</springboot-testcontainer-common.version>
+    <springboot-testcontainer-common.version>1.0.0-RC2</springboot-testcontainer-common.version>
   </properties>
 
   <dependencies>

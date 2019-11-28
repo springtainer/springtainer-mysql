@@ -30,7 +30,7 @@ jobs:
         run: mvn surefire:test
 
       - name: integration-tests
-        run: mvn jacoco:restore-instrumented-classes failsafe:integration-test failsafe:verify
+        run: mvn -DskipUTs -Dgpg.skip=true jacoco:restore-instrumented-classes verify
 
       - name: sonar-analyse
         env:
