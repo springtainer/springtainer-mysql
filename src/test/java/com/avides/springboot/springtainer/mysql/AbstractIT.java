@@ -1,4 +1,4 @@
-package com.avides.springboot.testcontainer.mysql;
+package com.avides.springboot.springtainer.mysql;
 
 import javax.annotation.PostConstruct;
 import javax.sql.DataSource;

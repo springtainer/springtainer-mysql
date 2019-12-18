@@ -1,4 +1,4 @@
-package com.avides.springboot.testcontainer.mysql;
+package com.avides.springboot.springtainer.mysql;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;

@@ -1,6 +1,6 @@
-package com.avides.springboot.testcontainer.mysql;
+package com.avides.springboot.springtainer.mysql;
 
-import static com.avides.springboot.testcontainer.mysql.MysqlProperties.BEAN_NAME;
+import static com.avides.springboot.springtainer.mysql.MysqlProperties.BEAN_NAME;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -21,8 +21,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.core.Ordered;
 import org.springframework.core.env.ConfigurableEnvironment;
 
-import com.avides.springboot.testcontainer.common.container.AbstractBuildingEmbeddedContainer;
-import com.avides.springboot.testcontainer.common.container.EmbeddedContainer;
+import com.avides.springboot.springtainer.common.container.AbstractBuildingEmbeddedContainer;
+import com.avides.springboot.springtainer.common.container.EmbeddedContainer;
 import com.github.dockerjava.api.command.CreateContainerCmd;
 
 import lombok.SneakyThrows;
