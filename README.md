@@ -1,18 +1,18 @@
-# springboot-testcontainer-mysql
+# springtainer-mysql
 
-[![Maven Central](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/com/avides/springboot/testcontainer/springboot-testcontainer-mysql/maven-metadata.xml.svg)](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.avides.springboot.testcontainer%22%20AND%20a%3A%22springboot-testcontainer-mysql%22)
-[![Build](https://github.com/springboot-testcontainer/springboot-testcontainer-mysql/workflows/release/badge.svg)](https://github.com/springboot-testcontainer/springboot-testcontainer-mysql/actions)
-[![Nightly build](https://github.com/springboot-testcontainer/springboot-testcontainer-mysql/workflows/nightly/badge.svg)](https://github.com/springboot-testcontainer/springboot-testcontainer-mysql/actions)
-[![Coverage report](https://sonarcloud.io/api/project_badges/measure?project=springboot-testcontainer_springboot-testcontainer-mysql&metric=coverage)](https://sonarcloud.io/dashboard?id=springboot-testcontainer_springboot-testcontainer-mysql)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=springboot-testcontainer_springboot-testcontainer-mysql&metric=alert_status)](https://sonarcloud.io/dashboard?id=springboot-testcontainer_springboot-testcontainer-mysql)
-[![Technical dept](https://sonarcloud.io/api/project_badges/measure?project=springboot-testcontainer_springboot-testcontainer-mysql&metric=sqale_index)](https://sonarcloud.io/dashboard?id=springboot-testcontainer_springboot-testcontainer-mysql)
+[![Maven Central](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/com/avides/springboot/springtainer/springtainer-mysql/maven-metadata.xml.svg)](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.avides.springboot.springtainer%22%20AND%20a%3A%22springtainer-mysql%22)
+[![Build](https://github.com/springtainer/springtainer-mysql/workflows/release/badge.svg)](https://github.com/springtainer/springtainer-mysql/actions)
+[![Nightly build](https://github.com/springtainer/springtainer-mysql/workflows/nightly/badge.svg)](https://github.com/springtainer/springtainer-mysql/actions)
+[![Coverage report](https://sonarcloud.io/api/project_badges/measure?project=springtainer_springtainer-mysql&metric=coverage)](https://sonarcloud.io/dashboard?id=springtainer_springtainer-mysql)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=springtainer_springtainer-mysql&metric=alert_status)](https://sonarcloud.io/dashboard?id=springtainer_springtainer-mysql)
+[![Technical dept](https://sonarcloud.io/api/project_badges/measure?project=springtainer_springtainer-mysql&metric=sqale_index)](https://sonarcloud.io/dashboard?id=springtainer_springtainer-mysql)
 
 ### Dependency
 ```xml
 <dependency>
-	<groupId>com.avides.springboot.testcontainer</groupId>
-	<artifactId>springboot-testcontainer-mysql</artifactId>
-	<version>1.0.0-RC2</version>
+	<groupId>com.avides.springboot.springtainer</groupId>
+	<artifactId>springtainer-mysql</artifactId>
+	<version>1.0.0</version>
 	<scope>test</scope>
 </dependency>
 ```
@@ -41,14 +41,14 @@ spring.datasource.password=${embedded.container.mysql.root-password}
 ## Logging
 To reduce logging insert this into the logback-configuration:
 ```xml
-<!-- Testcontainers -->
+<!-- Springtainer -->
 <logger name="com.github.dockerjava.jaxrs" level="WARN" />
 <logger name="com.github.dockerjava.core.command" level="WARN" />
 <logger name="org.apache.http" level="WARN" />
 ```
 
 ## Labels
-The container exports multiple labels to analyze running testcontainers:
-- `TESTCONTAINER_SERVICE=mysql`
-- `TESTCONTAINER_IMAGE=${embedded.container.mysql.docker-image}`
-- `TESTCONTAINER_STARTED=$currentTimestamp`
+The container exports multiple labels to analyze running springtainers:
+- `SPRINGTAINER_SERVICE=mysql`
+- `SPRINGTAINER_IMAGE=${embedded.container.mysql.docker-image}`
+- `SPRINGTAINER_STARTED=$currentTimestamp`

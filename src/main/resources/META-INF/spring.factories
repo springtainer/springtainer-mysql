@@ -1,2 +1,2 @@
 org.springframework.cloud.bootstrap.BootstrapConfiguration=\
-com.avides.springboot.testcontainer.mysql.EmbeddedMysqlContainerAutoConfiguration
+com.avides.springboot.springtainer.mysql.EmbeddedMysqlContainerAutoConfiguration
