@@ -137,7 +137,6 @@ public class EmbeddedMysqlContainerAutoConfiguration
         private Connection createSqlConnection(MysqlProperties properties)
                 throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException
         {
-            Class.forName("com.mysql.jdbc.Driver").newInstance();
             String connectionCommand = generateSqlConnectionUrl(properties) + "?verifyServerCertificate=false&useSSL=false&user=root&password=" + properties
                     .getRootPassword();
             return DriverManager.getConnection(connectionCommand);

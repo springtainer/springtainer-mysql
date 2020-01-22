@@ -14,7 +14,7 @@ import com.github.dockerjava.api.DockerClient;
 import com.github.dockerjava.core.DockerClientBuilder;
 
 @RunWith(SpringRunner.class)
-@SpringBootTest(properties = { "spring.datasource.driver-class-name=com.mysql.jdbc.Driver", "spring.datasource.url=${embedded.container.mysql.url}", "spring.datasource.username=root", "spring.datasource.password=${embedded.container.mysql.root-password}" })
+@SpringBootTest(properties = { "spring.datasource.url=${embedded.container.mysql.url}", "spring.datasource.username=root", "spring.datasource.password=${embedded.container.mysql.root-password}" })
 public abstract class AbstractIT
 {
     protected DockerClient dockerClient = DockerClientBuilder.getInstance().build();
