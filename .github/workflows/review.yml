@@ -5,7 +5,9 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  build:
+  review:
+    timeout-minutes: 30
+
     runs-on: ubuntu-latest
 
     steps:
@@ -15,10 +17,17 @@ jobs:
           java-version: 11
 
       - name: checkout
-        uses: actions/checkout@v1
+        uses: actions/checkout@v2
+
+      - name: project-version-check
+        uses: avides/actions-project-version-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          file-to-check: pom.xml
+          additional-files-to-check: README.md
 
       - name: caching
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -35,17 +44,19 @@ jobs:
 
       - name: sonar-analyse
         env:
+          SONAR_HOST: ${{ secrets.OS_SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.OS_SONAR_TOKEN }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          export GITHUB_PULL_REQUEST=$(cut -d / -f 3 <(echo ${GITHUB_REF}))
           export SONAR_ORGANIZATION=$(echo ${GITHUB_REPOSITORY} | cut -d / -f 1)
           mvn sonar:sonar \
-            -Dsonar.host.url=https://sonarcloud.io/ \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.host.url=${SONAR_HOST} \
+            -Dsonar.login=${SONAR_TOKEN} \
             -Dsonar.organization=${SONAR_ORGANIZATION} \
             -Dsonar.projectKey=${GITHUB_REPOSITORY//\//_} \
-            -Dsonar.pullrequest.key=${GITHUB_PULL_REQUEST} \
-            -Dsonar.pullrequest.branch=${GITHUB_REF} \
+            -Dsonar.pullrequest.key=${{ github.event.number }} \
+            -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }} \
+            -Dsonar.scm.revision=${{ github.event.pull_request.head.sha }} \
             -Dsonar.java.binaries=./target/classes
 
       - name: pom-analyse

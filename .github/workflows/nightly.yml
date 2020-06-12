@@ -2,10 +2,12 @@ name: nightly
 
 on:
   schedule:
-    - cron: 0 0 * * *
+    - cron: 0 0 * * 1
 
 jobs:
-  build:
+  nightly:
+    timeout-minutes: 30
+
     runs-on: ubuntu-latest
 
     steps:
@@ -14,10 +16,11 @@ jobs:
         with:
           java-version: 11
 
-      - uses: actions/checkout@v1
+      - name: checkout
+        uses: actions/checkout@v2
 
       - name: caching
-        uses: actions/cache@v1
+        uses: actions/cache@v2
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -34,12 +37,13 @@ jobs:
 
       - name: sonar-analyse
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SONAR_HOST: ${{ secrets.OS_SONAR_HOST_URL }}
+          SONAR_TOKEN: ${{ secrets.OS_SONAR_TOKEN }}
         run: |
           export SONAR_ORGANIZATION=$(echo ${GITHUB_REPOSITORY} | cut -d / -f 1)
           mvn sonar:sonar \
-            -Dsonar.host.url=https://sonarcloud.io/ \
-            -Dsonar.login=${{ secrets.SONAR_TOKEN }} \
+            -Dsonar.host.url=${SONAR_HOST} \
+            -Dsonar.login=${SONAR_TOKEN} \
             -Dsonar.organization=${SONAR_ORGANIZATION} \
             -Dsonar.projectKey=${GITHUB_REPOSITORY//\//_} \
             -Dsonar.java.binaries=./target/classes
