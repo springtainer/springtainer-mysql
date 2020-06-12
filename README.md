@@ -1,6 +1,6 @@
 # springtainer-mysql
 
-[![Maven Central](https://img.shields.io/maven-metadata/v/http/central.maven.org/maven2/com/avides/springboot/springtainer/springtainer-mysql/maven-metadata.xml.svg)](https://search.maven.org/#search%7Cgav%7C1%7Cg%3A%22com.avides.springboot.springtainer%22%20AND%20a%3A%22springtainer-mysql%22)
+[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.avides.springboot.springtainer/springtainer-mysql/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.avides.springboot.springtainer/springtainer-mysql)
 [![Build](https://github.com/springtainer/springtainer-mysql/workflows/release/badge.svg)](https://github.com/springtainer/springtainer-mysql/actions)
 [![Nightly build](https://github.com/springtainer/springtainer-mysql/workflows/nightly/badge.svg)](https://github.com/springtainer/springtainer-mysql/actions)
 [![Coverage report](https://sonarcloud.io/api/project_badges/measure?project=springtainer_springtainer-mysql&metric=coverage)](https://sonarcloud.io/dashboard?id=springtainer_springtainer-mysql)
@@ -12,7 +12,7 @@
 <dependency>
 	<groupId>com.avides.springboot.springtainer</groupId>
 	<artifactId>springtainer-mysql</artifactId>
-	<version>1.0.1</version>
+	<version>1.1.0</version>
 	<scope>test</scope>
 </dependency>
 ```
@@ -21,7 +21,7 @@
 Properties consumed (in `bootstrap.properties`):
 - `embedded.container.mysql.enabled` (default is `true`)
 - `embedded.container.mysql.startup-timeout` (default is `30`)
-- `embedded.container.mysql.docker-image` (default is `mysql:8.0.18`)
+- `embedded.container.mysql.docker-image` (default is `mysql:8.0.20`)
 - `embedded.container.mysql.port` (default is `3306`)
 - `embedded.container.mysql.root-password` (default is `root`)
 - `embedded.container.mysql.database-name` (default is `embeddedMySqlDb`)
