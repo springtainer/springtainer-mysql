@@ -15,7 +15,10 @@ public class EmbeddedMysqlContainerAutoConfigurationWith80IT extends AbstractIT
     @Test
     public void testGeneratedProperties()
     {
-        assertThat(environment.getProperty("embedded.container.mysql.url")).isNotEmpty();
+        assertThat(environment.getProperty("embedded.container.mysql.url")).startsWith("jdbc:");
+        assertThat(environment.getProperty("embedded.container.mysql.jdbc-url")).startsWith("jdbc:");
+        assertThat(environment.getProperty("embedded.container.mysql.r2dbc-url")).startsWith("r2dbc:");
+        assertThat(environment.getProperty("embedded.container.mysql.host")).isNotEmpty();
         assertThat(environment.getProperty("embedded.container.mysql.port")).isNotEmpty();
         assertThat(environment.getProperty("embedded.container.mysql.root-password")).isNotEmpty();
         assertThat(environment.getProperty("embedded.container.mysql.database-name")).isNotEmpty();
@@ -24,6 +27,9 @@ public class EmbeddedMysqlContainerAutoConfigurationWith80IT extends AbstractIT
         System.out.println();
         System.out.println("Resolved properties:");
         System.out.println("URL:        " + environment.getProperty("embedded.container.mysql.url"));
+        System.out.println("JDBC-URL:   " + environment.getProperty("embedded.container.mysql.jdbc-url"));
+        System.out.println("R2DBC-URL:  " + environment.getProperty("embedded.container.mysql.r2dbc-url"));
+        System.out.println("Host:       " + environment.getProperty("embedded.container.mysql.host"));
         System.out.println("Port:       " + environment.getProperty("embedded.container.mysql.port"));
         System.out.println("Password:   " + environment.getProperty("embedded.container.mysql.root-password"));
         System.out.println("Database:   " + environment.getProperty("embedded.container.mysql.database-name"));
@@ -34,10 +40,10 @@ public class EmbeddedMysqlContainerAutoConfigurationWith80IT extends AbstractIT
     @Test
     public void testCreatedDatabase()
     {
-        String createdDatabase = environment.getProperty("embedded.container.mysql.database-name");
+        var createdDatabase = environment.getProperty("embedded.container.mysql.database-name");
         assertTrue(jdbcTemplate.queryForList("SHOW DATABASES", String.class).stream().anyMatch(database -> database.equals(createdDatabase)));
 
-        String createdDatabaseCharset = environment.getProperty("embedded.container.mysql.database-charset");
+        var createdDatabaseCharset = environment.getProperty("embedded.container.mysql.database-charset");
         jdbcTemplate.update("USE " + createdDatabase);
         assertEquals(createdDatabaseCharset, jdbcTemplate.queryForObject("SELECT @@character_set_database;", String.class));
     }

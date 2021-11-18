@@ -12,7 +12,7 @@
 <dependency>
 	<groupId>com.avides.springboot.springtainer</groupId>
 	<artifactId>springtainer-mysql</artifactId>
-	<version>1.2.0</version>
+	<version>1.2.1</version>
 	<scope>test</scope>
 </dependency>
 ```
@@ -28,6 +28,9 @@ Properties consumed (in `bootstrap.properties`):
 - `embedded.container.mysql.database-charset` (default is `utf8mb4`)
 
 Properties provided (in `application-it.properties`):
+- `embedded.container.mysql.url` (an alias for `embedded.container.mysql.jdbc-url`)
+- `embedded.container.mysql.jdbc-url`
+- `embedded.container.mysql.r2dbc-url`
 - `embedded.container.mysql.host`
 - `embedded.container.mysql.port`
 
