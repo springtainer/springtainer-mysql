@@ -5,7 +5,6 @@ import static com.avides.springboot.springtainer.mysql.MysqlProperties.BEAN_NAME
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -50,7 +49,7 @@ public class EmbeddedMysqlContainerAutoConfiguration
         @Override
         protected List<String> getEnvs()
         {
-            List<String> envs = new ArrayList<>();
+            var envs = new ArrayList<String>();
             envs.add("MYSQL_ROOT_PASSWORD=" + properties.getRootPassword());
             return envs;
         }
@@ -64,9 +63,13 @@ public class EmbeddedMysqlContainerAutoConfiguration
         @Override
         protected Map<String, Object> providedProperties()
         {
-            Map<String, Object> provided = new HashMap<>();
-            provided.put("embedded.container.mysql.url", generateSqlConnectionUrl(properties) + properties
+            var provided = new HashMap<String, Object>();
+            var jdbcUrl = generateSqlConnectionUrl(properties, "jdbc") + properties.getDatabaseName() + "?verifyServerCertificate=false&useSSL=false";
+            provided.put("embedded.container.mysql.url", jdbcUrl);
+            provided.put("embedded.container.mysql.jdbc-url", jdbcUrl);
+            provided.put("embedded.container.mysql.r2dbc-url", generateSqlConnectionUrl(properties, "r2dbc") + properties
                     .getDatabaseName() + "?verifyServerCertificate=false&useSSL=false");
+            provided.put("embedded.container.mysql.host", getContainerHost());
             provided.put("embedded.container.mysql.port", Integer.valueOf(getContainerPort(properties.getPort())));
             provided.put("embedded.container.mysql.root-password", properties.getRootPassword());
             provided.put("embedded.container.mysql.database-name", properties.getDatabaseName());
@@ -74,10 +77,11 @@ public class EmbeddedMysqlContainerAutoConfiguration
             return provided;
         }
 
+        @SuppressWarnings("resource")
         @Override
         protected void adjustCreateCommand(CreateContainerCmd createContainerCmd)
         {
-            List<String> commands = new ArrayList<>();
+            var commands = new ArrayList<String>();
             // performance tweaks
             commands.add("--skip-log-bin");
             commands.add("--sync_binlog=0");
@@ -111,9 +115,9 @@ public class EmbeddedMysqlContainerAutoConfiguration
 
         @SneakyThrows
         @Override
-        protected boolean isContainerReady(MysqlProperties properties)
+        protected boolean isContainerReady(MysqlProperties mysqlProperties)
         {
-            try (Connection connection = createSqlConnection(properties))
+            try (var connection = createSqlConnection(mysqlProperties))
             {
                 initDatabase(connection);
                 return true;
@@ -123,23 +127,22 @@ public class EmbeddedMysqlContainerAutoConfiguration
         @SneakyThrows
         private void initDatabase(Connection connection)
         {
-            try (Statement statement = connection.createStatement())
+            try (var statement = connection.createStatement())
             {
                 statement.execute("CREATE SCHEMA `" + properties.getDatabaseName() + "` DEFAULT CHARACTER SET " + properties.getDatabaseCharset() + " ;");
             }
         }
 
-        private String generateSqlConnectionUrl(MysqlProperties properties)
+        private String generateSqlConnectionUrl(MysqlProperties mysqlProperties, String schema)
         {
-            return "jdbc:mysql://" + getContainerHost() + ":" + getContainerPort(properties.getPort()) + "/";
+            return schema + ":mysql://" + getContainerHost() + ":" + getContainerPort(mysqlProperties.getPort()) + "/";
         }
 
-        private Connection createSqlConnection(MysqlProperties properties)
-                throws InstantiationException, IllegalAccessException, ClassNotFoundException, SQLException
+        private Connection createSqlConnection(MysqlProperties mysqlProperties) throws SQLException
         {
-            String connectionCommand = generateSqlConnectionUrl(properties) + "?verifyServerCertificate=false&useSSL=false&user=root&password=" + properties
-                    .getRootPassword();
-            return DriverManager.getConnection(connectionCommand);
+            return DriverManager
+                    .getConnection(generateSqlConnectionUrl(mysqlProperties, "jdbc") + "?verifyServerCertificate=false&useSSL=false&user=root&password=" + mysqlProperties
+                            .getRootPassword());
         }
     }
 }
