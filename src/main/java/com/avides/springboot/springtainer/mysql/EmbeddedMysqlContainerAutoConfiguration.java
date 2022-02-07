@@ -39,7 +39,7 @@ public class EmbeddedMysqlContainerAutoConfiguration
         return new MysqlContainer("mysql", environment, properties);
     }
 
-    public class MysqlContainer extends AbstractBuildingEmbeddedContainer<MysqlProperties>
+    public static class MysqlContainer extends AbstractBuildingEmbeddedContainer<MysqlProperties>
     {
         public MysqlContainer(String service, ConfigurableEnvironment environment, MysqlProperties properties)
         {
