@@ -1,8 +1,10 @@
+# This configuration is used for nightly builds
 name: nightly
 
 on:
   schedule:
-    - cron: 0 0 * * 1
+    # Runs every Monday at 00:00
+    - cron: 0 0 * * MON
 
 jobs:
   nightly:
@@ -11,14 +13,25 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Setup java environment
       - name: setup-java
         uses: actions/setup-java@v1
         with:
           java-version: 11
 
+      # Checkout the git repository
       - name: checkout
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GPR_TOKEN }}
+          fetch-depth: ''
 
+      # Execute some necessary git commands to get more repository informations
+      - name: post-checkout
+        run: git fetch --prune --unshallow
+
+      # Setup/load GitHub Actions caching for external dependencies, in this case especially for Maven
       - name: caching
         uses: actions/cache@v2
         with:
@@ -26,15 +39,19 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven-
 
+      # Execute Maven command for compile and compile of the tests
       - name: compile
         run: mvn clean compile test-compile
 
+      # Execute Unit tests
       - name: unit-tests
         run: mvn surefire:test
 
+      # Execute Integration tests, in this case we can skip the unit tests and load these with jacoco
       - name: integration-tests
         run: mvn -DskipUTs -Dgpg.skip=true jacoco:restore-instrumented-classes verify
 
+      # Execute sonar analysis and publish results to the sonarqube server
       - name: sonar-analyse
         env:
           SONAR_HOST: ${{ secrets.OS_SONAR_HOST_URL }}
