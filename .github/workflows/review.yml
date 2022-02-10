@@ -1,7 +1,9 @@
+# This configuration is used for the pull request review
 name: review
 
 on:
   pull_request:
+    # Runs only on pull request creation and on every new commit to the created pull request
     types: [opened, synchronize]
 
 jobs:
@@ -11,14 +13,48 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Cancels previous run for this branch that have a different commit id (SHA)
+      - name: cancel-previous-run
+        uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
+
+      # Setup java environment
       - name: setup-java
         uses: actions/setup-java@v1
         with:
           java-version: 11
 
+      # Checkout the git repository
       - name: checkout
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GPR_TOKEN }}
+          fetch-depth: ''
 
+      # Execute some necessary git commands to get more repository informations
+      - name: post-checkout
+        run: git fetch --prune --unshallow
+
+      # Update GitHub Action configuration if necessary
+      - name: action-configuration-autoupdate
+        uses: avides/actions-action-configuration-autoupdate@v1
+        with:
+          token: ${{ secrets.GPR_TOKEN }}
+          actions-configuration-files: os-java-library/nightly.yml,os-java-library/release.yml,os-java-library/review.yml
+          source-repository: ${{ secrets.ACTIONS_CONFIG_AUTOUPDATE_REPO }}
+
+      # Push updated GitHub Actions configuration if necessary
+      - uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          file_pattern: .github/workflows/*.yml
+          commit_user_name: ${{ secrets.ACTIONS_CONFIG_AUTOUPDATE_USER }}
+          commit_user_email: ${{ secrets.ACTIONS_CONFIG_AUTOUPDATE_EMAIL }}
+          commit_author: ${{ secrets.ACTIONS_CONFIG_AUTOUPDATE_AUTHOR }}
+          commit_message: Update GitHub Action configuration
+
+      # Verify project version is updated
       - name: project-version-check
         uses: avides/actions-project-version-check@v1
         with:
@@ -26,6 +62,26 @@ jobs:
           file-to-check: pom.xml
           additional-files-to-check: README.md
 
+      # Check if documentation reminder comment is already given
+      - name: find-documentation-reminder-comment
+        uses: peter-evans/find-comment@v1
+        id: find_documentation_reminder_comment
+        with:
+          issue-number: ${{ github.event.number }}
+          body-includes: "Confluence/GitHub documentation added or updated?"
+
+      # Add documentation reminder comment if not given
+      - name: documentation-reminder-comment
+        uses: jungwinter/comment@v1
+        id: create
+        if: ${{ steps.find_documentation_reminder_comment.outputs.comment-id == 0 }}
+        with:
+          type: create
+          body: 'Confluence/GitHub documentation added or updated?'
+          issue_number: ${{ github.event.number }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      # Setup/load GitHub Actions caching for external dependencies, in this case especially for Maven
       - name: caching
         uses: actions/cache@v2
         with:
@@ -33,15 +89,19 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven-
 
+      # Execute Maven command for compile and compile of the tests
       - name: compile
         run: mvn clean compile test-compile
 
+      # Execute Unit tests
       - name: unit-tests
         run: mvn surefire:test
 
+      # Execute Integration tests, in this case we can skip the unit tests and load these with jacoco
       - name: integration-tests
         run: mvn -DskipUTs -Dgpg.skip=true jacoco:restore-instrumented-classes verify
 
+       # Execute sonar analysis for current branch
       - name: sonar-analyse
         env:
           SONAR_HOST: ${{ secrets.OS_SONAR_HOST_URL }}
@@ -56,8 +116,10 @@ jobs:
             -Dsonar.projectKey=${GITHUB_REPOSITORY//\//_} \
             -Dsonar.pullrequest.key=${{ github.event.number }} \
             -Dsonar.pullrequest.branch=${{ github.event.pull_request.head.ref }} \
+            -Dsonar.pullrequest.github.repository=${GITHUB_REPOSITORY} \
             -Dsonar.scm.revision=${{ github.event.pull_request.head.sha }} \
             -Dsonar.java.binaries=./target/classes
 
+      # Execute Maven enforcer plugin
       - name: pom-analyse
         run: mvn enforcer:enforce

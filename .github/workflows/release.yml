@@ -1,8 +1,10 @@
+# This configuration is used for the deployment and publish to GitHub Packages
 name: release
 
 on:
   push:
     branches:
+      # Runs only on push to the master branch
       - master
 
 jobs:
@@ -15,6 +17,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Setup java environment
       - name: setup-java
         uses: actions/setup-java@v1
         with:
@@ -23,17 +26,29 @@ jobs:
           server-username: OSSRH_USERNAME
           server-password: OSSRH_PASSWORD
 
+      # Checkout the git repository
       - name: setup-github-release
         run: sed -i -e 's/<\/servers>/<server><id>github<\/id><username>x-access-token<\/username><password>${GITHUB_TOKEN}<\/password><\/server><\/servers>/g' /home/runner/.m2/settings.xml
 
+      # Setup GPG for Maven Central deployment
       - name: setup-gpg
         env:
           GPG_PRIVATE_KEY: ${{ secrets.OS_GPG_PRIVATE_KEY }}
         run: cat <(echo -e "${GPG_PRIVATE_KEY}") | gpg --batch --import
 
+      # Checkout the git repository
       - name: checkout
         uses: actions/checkout@v2
+        with:
+          ref: ${{ github.head_ref }}
+          token: ${{ secrets.GPR_TOKEN }}
+          fetch-depth: ''
 
+      # Execute some necessary git commands to get more repository informations
+      - name: post-checkout
+        run: git fetch --prune --unshallow
+
+      # Setup GitHub Actions caching for external dependencies, in this case especially for Maven
       - name: caching
         uses: actions/cache@v2
         with:
@@ -41,6 +56,7 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-maven-
 
+      # Execute Maven command for the deployment and publish to Maven Central
       - name: deploy
         env:
           OSSRH_USERNAME: ${{ secrets.OS_OSSRH_USERNAME }}
@@ -48,6 +64,7 @@ jobs:
           GPG_PASSPHRASE: ${{ secrets.OS_GPG_PASSPHRASE }}
         run: mvn deploy -Dmaven.wagon.http.pool=false -Dgpg.executable=gpg -Dgpg.passphrase=${GPG_PASSPHRASE}
 
+      # Execute sonar analysis and publish results to the sonarcloud server
       - name: sonar-analyse
         env:
           SONAR_HOST: ${{ secrets.OS_SONAR_HOST_URL }}
@@ -60,3 +77,35 @@ jobs:
             -Dsonar.organization=${SONAR_ORGANIZATION} \
             -Dsonar.projectKey=${GITHUB_REPOSITORY//\//_} \
             -Dsonar.java.binaries=./target/classes
+
+      # Get the current project version from POM
+      - name: get-project-version
+        id: get_project_version
+        uses: avides/actions-project-version-check@v1
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          file-to-check: pom.xml
+          only-return-version: true
+
+      # Get last commit message for GitHub Release tag
+      - name: setup-github-release
+        id: setup_github_release
+        env:
+          PROJECT_VERSION: ${{ steps.get_project_version.outputs.version }}
+        run: |
+          echo ::set-output name=gitcommitmessage::$(git log --no-merges -1 --oneline)
+          if [[ "$PROJECT_VERSION" == *"SNAPSHOT"* || "$PROJECT_VERSION" == *"RC"* ]]; then
+            echo ::set-output name=isprerelease::true
+          fi
+
+      # Create and publish GitHub Release tag
+      - name: github-release
+        uses: actions/create-release@v1
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GPR_TOKEN }}
+        with:
+          tag_name: ${{ steps.get_project_version.outputs.version }}
+          release_name: ${{ steps.get_project_version.outputs.version }}
+          body: ${{ steps.setup_github_release.outputs.gitcommitmessage }}
+          prerelease: ${{ steps.setup_github_release.outputs.isprerelease }}
