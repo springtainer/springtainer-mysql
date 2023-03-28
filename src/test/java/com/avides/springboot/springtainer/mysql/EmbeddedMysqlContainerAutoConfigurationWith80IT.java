@@ -9,7 +9,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.TestPropertySource;
 
-@TestPropertySource(properties = "embedded.container.mysql.docker-image=mysql:8.0.28")
+@TestPropertySource(properties = "embedded.container.mysql.docker-image=mysql:8.0.32")
 public class EmbeddedMysqlContainerAutoConfigurationWith80IT extends AbstractIT
 {
     @Test
