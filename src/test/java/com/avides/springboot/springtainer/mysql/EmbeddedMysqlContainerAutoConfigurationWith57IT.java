@@ -61,7 +61,7 @@ public class EmbeddedMysqlContainerAutoConfigurationWith57IT extends AbstractIT
     @Test
     public void testCheckVersion()
     {
-        assertThat(jdbcTemplate.queryForObject("SELECT @@version", String.class)).startsWith("8.");
+        assertThat(jdbcTemplate.queryForObject("SELECT @@version", String.class)).isEqualTo("5.7.41");
     }
 
     @Configuration
