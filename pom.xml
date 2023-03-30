@@ -58,7 +58,7 @@
     <!-- Spring -->
     <spring.version>5.3.24</spring.version>
     <spring-boot.version>2.6.14</spring-boot.version>
-    <mysql-connector-j.version>8.0.32</mysql-connector-j.version>
+    <mysql-connector-java.version>8.0.32</mysql-connector-java.version>
     <!-- Other -->
     <springtainer-common.version>1.4.0</springtainer-common.version>
     <lombok.version>1.18.26</lombok.version>
@@ -102,9 +102,9 @@
       </exclusions>
     </dependency>
     <dependency>
-      <groupId>com.mysql</groupId>
-      <artifactId>mysql-connector-j</artifactId>
-      <version>${mysql-connector-j.version}</version>
+      <groupId>mysql</groupId>
+      <artifactId>mysql-connector-java</artifactId>
+      <version>${mysql-connector-java.version}</version>
       <scope>provided</scope>
     </dependency>
     <dependency>
