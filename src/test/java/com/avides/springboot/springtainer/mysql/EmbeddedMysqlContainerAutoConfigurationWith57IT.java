@@ -1,17 +1,27 @@
 package com.avides.springboot.springtainer.mysql;
 
+import static com.avides.springboot.springtainer.common.util.OSUtils.isMac;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assume.assumeFalse;
 
+import org.junit.BeforeClass;
 import org.junit.Test;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.TestPropertySource;
 
-@TestPropertySource(properties = "embedded.container.mysql.docker-image=mysql:8.0.18")
+@TestPropertySource(properties = "embedded.container.mysql.docker-image=mysql:5.7.41")
 public class EmbeddedMysqlContainerAutoConfigurationWith57IT extends AbstractIT
 {
+    @BeforeClass
+    public static void setUp()
+    {
+        // these tests won't run on Macs with Apple-Chips due to the docker-image, which does not support them
+        assumeFalse(isMac());
+    }
+
     @Test
     public void testGeneratedProperties()
     {
@@ -51,7 +61,7 @@ public class EmbeddedMysqlContainerAutoConfigurationWith57IT extends AbstractIT
     @Test
     public void testCheckVersion()
     {
-        assertThat(jdbcTemplate.queryForObject("SELECT @@version", String.class)).startsWith("8.");
+        assertThat(jdbcTemplate.queryForObject("SELECT @@version", String.class)).isEqualTo("5.7.41");
     }
 
     @Configuration
