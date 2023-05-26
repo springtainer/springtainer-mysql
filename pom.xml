@@ -57,7 +57,7 @@
     <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
     <!-- Spring -->
     <spring.version>5.3.24</spring.version>
-    <spring-boot.version>2.6.14</spring-boot.version>
+    <spring-boot.version>2.6.15</spring-boot.version>
     <mysql-connector-java.version>8.0.32</mysql-connector-java.version>
     <!-- Other -->
     <springtainer-common.version>1.4.0</springtainer-common.version>
