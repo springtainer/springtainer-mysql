@@ -200,10 +200,6 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
         <version>${maven-javadoc-plugin.version}</version>
-        <configuration>
-          <!-- Fix for https://bugs.openjdk.java.net/browse/JDK-8212233 -->
-          <failOnError>false</failOnError>
-        </configuration>
         <executions>
           <execution>
             <id>attach-javadocs</id>
@@ -225,7 +221,7 @@
               <goal>sign</goal>
             </goals>
             <configuration>
-              <!-- Hopefully fixed in version 1.7 ? (https://issues.apache.org/jira/browse/MGPG-59) -->
+              <!-- Needed for non-interactive signing; gpg would otherwise try an interactive pinentry prompt and fail in headless build environments -->
               <gpgArguments>
                 <arg>--pinentry-mode</arg>
                 <arg>loopback</arg>
