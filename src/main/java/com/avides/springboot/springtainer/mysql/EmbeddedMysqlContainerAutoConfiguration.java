@@ -51,6 +51,7 @@ public class EmbeddedMysqlContainerAutoConfiguration
         {
             var envs = new ArrayList<String>();
             envs.add("MYSQL_ROOT_PASSWORD=" + properties.getRootPassword());
+            envs.add("MYSQL_INITDB_SKIP_TZINFO=1");
             return envs;
         }
 
@@ -87,6 +88,8 @@ public class EmbeddedMysqlContainerAutoConfiguration
             commands.add("--sync_binlog=0");
             commands.add("--innodb_flush_log_at_trx_commit=2");
             commands.add("--innodb_flush_method=O_DIRECT");
+            commands.add("--innodb-buffer-pool-size=128M");
+            commands.add("--performance-schema=OFF");
             // legacy support for mysql 8.X
             commands.add("--default-authentication-plugin=mysql_native_password");
             createContainerCmd.withCmd(commands);
