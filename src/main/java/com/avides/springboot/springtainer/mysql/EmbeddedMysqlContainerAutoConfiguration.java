@@ -95,27 +95,6 @@ public class EmbeddedMysqlContainerAutoConfiguration
             createContainerCmd.withCmd(commands);
         }
 
-        /**
-         * Skip ssl-key creation which reduces io and startup-time
-         * <p>
-         * Better solution: https://github.com/docker-library/mysql/pull/428
-         */
-        // @SneakyThrows
-        // @Override
-        // protected void adjustCreateCommand(CreateContainerCmd createContainerCmd)
-        // {
-        // File emptyFile = File.createTempFile("abc", "xyz");
-        // emptyFile.deleteOnExit();
-        //
-        // Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(emptyFile.toPath());
-        // permissions.add(PosixFilePermission.OWNER_EXECUTE);
-        // permissions.add(PosixFilePermission.GROUP_EXECUTE);
-        // permissions.add(PosixFilePermission.OTHERS_EXECUTE);
-        // Files.setPosixFilePermissions(emptyFile.toPath(), permissions);
-        //
-        // createContainerCmd.withBinds(Bind.parse(emptyFile.getAbsolutePath() + ":/usr/bin/mysql_ssl_rsa_setup:ro"));
-        // }
-
         @SneakyThrows
         @Override
         protected boolean isContainerReady(MysqlProperties mysqlProperties)
