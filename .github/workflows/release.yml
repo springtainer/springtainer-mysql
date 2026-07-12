@@ -22,9 +22,9 @@ jobs:
         uses: actions/setup-java@v1
         with:
           java-version: 11
-          server-id: ossrh
-          server-username: OSSRH_USERNAME
-          server-password: OSSRH_PASSWORD
+          server-id: central
+          server-username: OS_CENTRAL_USERNAME
+          server-password: OS_CENTRAL_PASSWORD
 
       # Checkout the git repository
       - name: setup-github-release
@@ -59,8 +59,8 @@ jobs:
       # Execute Maven command for the deployment and publish to Maven Central
       - name: deploy
         env:
-          OSSRH_USERNAME: ${{ secrets.OS_OSSRH_USERNAME }}
-          OSSRH_PASSWORD: ${{ secrets.OS_OSSRH_PASSWORD }}
+          OS_CENTRAL_USERNAME: ${{ secrets.OS_CENTRAL_USERNAME }}
+          OS_CENTRAL_PASSWORD: ${{ secrets.OS_CENTRAL_PASSWORD }}
           GPG_PASSPHRASE: ${{ secrets.OS_GPG_PASSPHRASE }}
         run: mvn deploy -Dmaven.wagon.http.pool=false -Dgpg.executable=gpg -Dgpg.passphrase=${GPG_PASSPHRASE}
 

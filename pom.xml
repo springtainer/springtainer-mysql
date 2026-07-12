@@ -3,7 +3,7 @@
 
   <groupId>com.avides.springboot.springtainer</groupId>
   <artifactId>springtainer-mysql</artifactId>
-  <version>2.0.9</version>
+  <version>2.1.0</version>
 
   <name>springtainer-mysql</name>
   <description>MySQL test-container</description>
@@ -46,21 +46,20 @@
     <maven-compiler-plugin.version>3.15.0</maven-compiler-plugin.version>
     <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
     <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
-    <maven-gpg-plugin.version>3.0.1</maven-gpg-plugin.version>
+    <maven-gpg-plugin.version>3.2.8</maven-gpg-plugin.version>
     <maven-surefire-plugin.version>3.5.6</maven-surefire-plugin.version>
     <maven-failsafe-plugin.version>3.5.6</maven-failsafe-plugin.version>
     <maven-enforcer-plugin.version>3.6.3</maven-enforcer-plugin.version>
-    <maven-release-plugin.version>3.0.0-M5</maven-release-plugin.version>
+    <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
     <maven-scm-provider-gitexe.version>1.11.3</maven-scm-provider-gitexe.version>
-    <exists-maven-plugin.version>0.6.0</exists-maven-plugin.version>
-    <github-release-plugin.version>1.4.0</github-release-plugin.version>
-    <nexus-staging-maven-plugin.version>1.6.8</nexus-staging-maven-plugin.version>
+    <exists-maven-plugin.version>0.15.2</exists-maven-plugin.version>
+    <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
     <!-- Spring -->
     <spring.version>6.2.19</spring.version>
     <spring-boot.version>3.5.16</spring-boot.version>
     <mysql-connector-j.version>9.7.0</mysql-connector-j.version>
     <!-- Other -->
-    <springtainer-common.version>2.0.9</springtainer-common.version>
+    <springtainer-common.version>2.1.0</springtainer-common.version>
     <lombok.version>1.18.46</lombok.version>
     <slf4j-api.version>2.0.18</slf4j-api.version>
     <!-- Testing -->
@@ -380,34 +379,14 @@
         </executions>
       </plugin>
       <plugin>
-        <groupId>de.jutzig</groupId>
-        <artifactId>github-release-plugin</artifactId>
-        <version>${github-release-plugin.version}</version>
-        <executions>
-          <execution>
-            <id>github-upload</id>
-            <phase>deploy</phase>
-            <goals>
-              <goal>release</goal>
-            </goals>
-            <configuration>
-              <releaseName>${project.version}</releaseName>
-              <tag>${project.version}</tag>
-              <artifact>${project.build.directory}/${project.artifactId}-${project.version}.jar</artifact>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.sonatype.plugins</groupId>
-        <artifactId>nexus-staging-maven-plugin</artifactId>
-        <version>${nexus-staging-maven-plugin.version}</version>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <version>${central-publishing-maven-plugin.version}</version>
         <extensions>true</extensions>
         <configuration>
-          <serverId>ossrh</serverId>
-          <nexusUrl>https://oss.sonatype.org/</nexusUrl>
-          <autoReleaseAfterClose>true</autoReleaseAfterClose>
-          <skipRemoteStaging>${skip-deploy-to-central}</skipRemoteStaging>
+          <autoPublish>true</autoPublish>
+          <waitUntil>published</waitUntil>
+          <skipPublishing>${skip-deploy-to-central}</skipPublishing>
         </configuration>
       </plugin>
     </plugins>
