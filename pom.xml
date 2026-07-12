@@ -3,7 +3,7 @@
 
   <groupId>com.avides.springboot.springtainer</groupId>
   <artifactId>springtainer-mysql</artifactId>
-  <version>2.0.8</version>
+  <version>2.0.9</version>
 
   <name>springtainer-mysql</name>
   <description>MySQL test-container</description>
@@ -60,7 +60,7 @@
     <spring-boot.version>3.5.16</spring-boot.version>
     <mysql-connector-j.version>9.7.0</mysql-connector-j.version>
     <!-- Other -->
-    <springtainer-common.version>2.0.8</springtainer-common.version>
+    <springtainer-common.version>2.0.9</springtainer-common.version>
     <lombok.version>1.18.46</lombok.version>
     <slf4j-api.version>2.0.18</slf4j-api.version>
     <!-- Testing -->
