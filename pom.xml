@@ -38,7 +38,6 @@
 
   <properties>
     <!-- System -->
-    <timestamp>${maven.build.timestamp}</timestamp>
     <maven.build.timestamp.format>dd.MM.yyyy HH:mm</maven.build.timestamp.format>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>21</java.version>
@@ -55,7 +54,6 @@
     <exists-maven-plugin.version>0.15.2</exists-maven-plugin.version>
     <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
     <!-- Common -->
-    <spring.version>6.2.19</spring.version>
     <spring-boot.version>3.5.16</spring-boot.version>
     <springtainer-common.version>2.1.2</springtainer-common.version>
     <lombok.version>1.18.46</lombok.version>
@@ -63,6 +61,7 @@
     <!-- Other -->
     <mysql-connector-j.version>9.7.0</mysql-connector-j.version>
     <!-- Testing -->
+    <spring.version>6.2.19</spring.version>
     <assertj-core.version>3.27.7</assertj-core.version>
     <junit-jupiter.version>5.12.2</junit-jupiter.version>
     <jacoco.version>0.8.15</jacoco.version>
