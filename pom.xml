@@ -61,9 +61,9 @@
     <!-- Other -->
     <mysql-connector-j.version>9.7.0</mysql-connector-j.version>
     <!-- Testing -->
-    <spring.version>6.2.19</spring.version>
+    <spring-test.version>6.2.19</spring-test.version>
     <assertj-core.version>3.27.7</assertj-core.version>
-    <junit-jupiter.version>5.12.2</junit-jupiter.version>
+    <junit-jupiter-engine.version>5.12.2</junit-jupiter-engine.version>
     <jacoco.version>0.8.15</jacoco.version>
     <logback-classic.version>1.5.34</logback-classic.version>
   </properties>
@@ -124,7 +124,7 @@
     <dependency>
       <groupId>org.junit.jupiter</groupId>
       <artifactId>junit-jupiter-engine</artifactId>
-      <version>${junit-jupiter.version}</version>
+      <version>${junit-jupiter-engine.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -137,7 +137,7 @@
     <dependency>
       <groupId>org.springframework</groupId>
       <artifactId>spring-test</artifactId>
-      <version>${spring.version}</version>
+      <version>${spring-test.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
