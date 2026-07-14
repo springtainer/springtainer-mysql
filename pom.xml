@@ -63,8 +63,7 @@
 
   <dependencyManagement>
     <dependencies>
-      <!-- Respect Spring Boot's dependency management: all BOM-managed versions
-           (spring-*, junit, mockito, byte-buddy, assertj, logback, slf4j, httpclient5, ...)
+      <!-- Respect Spring Boot's dependency management: BOM-managed dependency versions
            are inherited from here instead of being pinned individually. -->
       <dependency>
         <groupId>org.springframework.boot</groupId>
