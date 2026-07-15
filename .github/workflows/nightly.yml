@@ -13,27 +13,44 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # Setup java environment
-      - name: setup-java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 11
-
       # Checkout the git repository
       - name: checkout
-        uses: actions/checkout@v2
+        uses: actions/checkout@v6
         with:
-          ref: ${{ github.head_ref }}
-          token: ${{ secrets.GPR_TOKEN }}
-          fetch-depth: ''
+          fetch-depth: 0
 
-      # Execute some necessary git commands to get more repository informations
-      - name: post-checkout
-        run: git fetch --prune --unshallow
+      # Get the current project version from pom.xml
+      - name: get-project-version
+        id: get_project_version
+        uses: avides/actions-project-version-check@v2
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          file-to-check: pom.xml
+          only-return-version: true
+
+      # Determine java-version
+      - name: determine-java-version
+        id: determine_java_version
+        run: |
+          if grep -q "<java.version>" pom.xml; then
+            JAVA_VERSION=$(grep -oP '(?<=<java.version>).*?(?=</java.version>)' pom.xml | head -n 1 | cut -d. -f1 | xargs)
+          elif [ -f ".github/java.version" ]; then
+            JAVA_VERSION=$(cat .github/java.version | xargs)
+          else
+            JAVA_VERSION="11"
+          fi
+          echo "detected_java_version=$JAVA_VERSION" >> $GITHUB_OUTPUT
+
+      # Setup java environment
+      - name: setup-java
+        uses: actions/setup-java@v5
+        with:
+          distribution: temurin
+          java-version: ${{ steps.determine_java_version.outputs.detected_java_version }}
 
       # Setup/load GitHub Actions caching for external dependencies, in this case especially for Maven
       - name: caching
-        uses: actions/cache@v2
+        uses: actions/cache@v5
         with:
           path: ~/.m2/repository
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
@@ -51,16 +68,16 @@ jobs:
       - name: integration-tests
         run: mvn -DskipUTs -Dgpg.skip=true jacoco:restore-instrumented-classes verify
 
-      # Execute sonar analysis and publish results to the sonarqube server
+      # Execute sonar analysis and publish results to the sonarcloud server
       - name: sonar-analyse
         env:
-          SONAR_HOST: ${{ secrets.OS_SONAR_HOST_URL }}
-          SONAR_TOKEN: ${{ secrets.OS_SONAR_TOKEN }}
+          PROJECT_VERSION: ${{ steps.get_project_version.outputs.version }}
         run: |
           export SONAR_ORGANIZATION=$(echo ${GITHUB_REPOSITORY} | cut -d / -f 1)
-          mvn sonar:sonar \
-            -Dsonar.host.url=${SONAR_HOST} \
-            -Dsonar.login=${SONAR_TOKEN} \
+          mvn org.sonarsource.scanner.maven:sonar-maven-plugin:5.5.0.6356:sonar \
+            -Dsonar.host.url=${{ secrets.OS_SONAR_HOST_URL }} \
+            -Dsonar.token=${{ secrets.OS_SONAR_TOKEN }} \
+            -Dsonar.projectVersion=${PROJECT_VERSION} \
+            -Dsonar.branch.name=master \
             -Dsonar.organization=${SONAR_ORGANIZATION} \
-            -Dsonar.projectKey=${GITHUB_REPOSITORY//\//_} \
-            -Dsonar.java.binaries=./target/classes
+            -Dsonar.projectKey=${GITHUB_REPOSITORY//\//_}
