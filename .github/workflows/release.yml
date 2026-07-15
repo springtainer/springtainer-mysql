@@ -71,13 +71,13 @@ jobs:
         env:
           OS_CENTRAL_USERNAME: ${{ secrets.OS_CENTRAL_USERNAME }}
           OS_CENTRAL_PASSWORD: ${{ secrets.OS_CENTRAL_PASSWORD }}
-          GPG_PASSPHRASE: ${{ secrets.OS_GPG_PASSPHRASE }}
+          MAVEN_GPG_PASSPHRASE: ${{ secrets.OS_GPG_PASSPHRASE }}
           PROJECT_VERSION: ${{ steps.get_project_version.outputs.version }}
         run: |
           if [[ "$PROJECT_VERSION" == *"SNAPSHOT"* || "$PROJECT_VERSION" == *"RC"* ]]; then
-            mvn -Dmaven.wagon.http.pool=false -Dgpg.executable=gpg -Dgpg.passphrase=${GPG_PASSPHRASE} clean deploy
+            mvn -Dmaven.wagon.http.pool=false -Dgpg.executable=gpg clean deploy
           else
-            mvn -Dmaven.wagon.http.pool=false -Dgpg.executable=gpg -Dgpg.passphrase=${GPG_PASSPHRASE} -DskipUTs -DskipITs clean deploy
+            mvn -Dmaven.wagon.http.pool=false -Dgpg.executable=gpg -DskipUTs -DskipITs clean deploy
           fi
 
       # Execute sonar analysis and publish results to the sonarcloud server
