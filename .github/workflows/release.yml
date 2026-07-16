@@ -5,7 +5,7 @@ on:
   push:
     branches:
       # Runs only on push to the master branch
-      - master
+      - spring-boot-3-migration
 
 jobs:
   release:
