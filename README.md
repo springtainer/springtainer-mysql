@@ -1,11 +1,10 @@
 # springtainer-mysql
 
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/com.avides.springboot.springtainer/springtainer-mysql/badge.svg)](https://maven-badges.herokuapp.com/maven-central/com.avides.springboot.springtainer/springtainer-mysql)
-[![Build](https://github.com/springtainer/springtainer-mysql/workflows/release/badge.svg)](https://github.com/springtainer/springtainer-mysql/actions)
-[![Nightly build](https://github.com/springtainer/springtainer-mysql/workflows/nightly/badge.svg)](https://github.com/springtainer/springtainer-mysql/actions)
-[![Coverage report](https://sonarcloud.io/api/project_badges/measure?project=springtainer_springtainer-mysql&metric=coverage)](https://sonarcloud.io/dashboard?id=springtainer_springtainer-mysql)
-[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=springtainer_springtainer-mysql&metric=alert_status)](https://sonarcloud.io/dashboard?id=springtainer_springtainer-mysql)
-[![Technical dept](https://sonarcloud.io/api/project_badges/measure?project=springtainer_springtainer-mysql&metric=sqale_index)](https://sonarcloud.io/dashboard?id=springtainer_springtainer-mysql)
+[![Maven Central](https://img.shields.io/maven-central/v/com.avides.springboot.springtainer/springtainer-mysql.svg?label=maven-central)](https://search.maven.org/artifact/com.avides.springboot.springtainer/springtainer-mysql)
+[![Release](https://github.com/springtainer/springtainer-mysql/actions/workflows/release.yml/badge.svg)](https://github.com/springtainer/springtainer-mysql/actions/workflows/release.yml)
+[![Nightly build](https://github.com/springtainer/springtainer-mysql/actions/workflows/nightly.yml/badge.svg)](https://github.com/springtainer/springtainer-mysql/actions/workflows/nightly.yml)
+[![Quality Gate](https://sonarcloud.io/api/project_badges/measure?project=springtainer_springtainer-mysql&metric=alert_status)](https://sonarcloud.io/summary/new_code?id=springtainer_springtainer-mysql)
+[![Coverage](https://sonarcloud.io/api/project_badges/measure?project=springtainer_springtainer-mysql&metric=coverage)](https://sonarcloud.io/summary/new_code?id=springtainer_springtainer-mysql)
 
 ### Dependency
 
