@@ -3,7 +3,7 @@
 
   <groupId>com.avides.springboot.springtainer</groupId>
   <artifactId>springtainer-mysql</artifactId>
-  <version>2.0.0-RC1</version>
+  <version>2.0.0-RC2</version>
 
   <name>springtainer-mysql</name>
   <description>MySQL test-container</description>
@@ -54,11 +54,13 @@
     <central-publishing-maven-plugin.version>0.11.0</central-publishing-maven-plugin.version>
     <!-- Common -->
     <spring-boot.version>3.5.16</spring-boot.version>
-    <springtainer-common.version>2.0.0-RC1</springtainer-common.version>
+    <springtainer-common.version>2.0.0-RC4</springtainer-common.version>
     <lombok.version>1.18.46</lombok.version>
     <!-- Other -->
     <!-- Testing -->
     <jacoco.version>0.8.15</jacoco.version>
+    <!-- Explicit so Sonar reads the combined UT+IT jacoco report instead of guessing via scanner-default path conventions. -->
+    <sonar.coverage.jacoco.xmlReportPaths>${project.build.directory}/site/jacoco/jacoco.xml</sonar.coverage.jacoco.xmlReportPaths>
   </properties>
 
   <dependencyManagement>
@@ -231,6 +233,7 @@
           <argLine>-Duser.timezone=Europe/Berlin</argLine>
           <systemPropertyVariables>
             <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+            <jacoco-agent.append>true</jacoco-agent.append>
           </systemPropertyVariables>
         </configuration>
       </plugin>
@@ -240,6 +243,10 @@
         <version>${maven-failsafe-plugin.version}</version>
         <configuration>
           <reportsDirectory>target/surefire-reports</reportsDirectory>
+          <systemPropertyVariables>
+            <jacoco-agent.destfile>target/jacoco.exec</jacoco-agent.destfile>
+            <jacoco-agent.append>true</jacoco-agent.append>
+          </systemPropertyVariables>
         </configuration>
         <executions>
           <execution>
@@ -278,51 +285,25 @@
               <goal>restore-instrumented-classes</goal>
             </goals>
           </execution>
+          <!--
+            default-restore-instrumented-classes above runs at its default phase (prepare-package) to keep the
+            packaged jar free of instrumented bytecode. But that means classes are back to non-instrumented by the
+            time integration-test runs (pre-integration-test/integration-test come after prepare-package/package in
+            the lifecycle) - so without re-instrumenting here, Failsafe would silently record zero IT coverage.
+          -->
           <execution>
-            <id>default-report</id>
-            <phase>prepare-package</phase>
+            <id>pre-integration-test-instrument</id>
+            <phase>pre-integration-test</phase>
             <goals>
-              <goal>report</goal>
+              <goal>instrument</goal>
             </goals>
-            <configuration>
-              <dataFile>target/jacoco-ut.exec</dataFile>
-              <outputDirectory>target/jacoco-ut</outputDirectory>
-            </configuration>
           </execution>
           <execution>
-            <id>integration-test-report</id>
+            <id>post-integration-test-restore</id>
             <phase>post-integration-test</phase>
             <goals>
-              <goal>report</goal>
+              <goal>restore-instrumented-classes</goal>
             </goals>
-            <configuration>
-              <dataFile>target/jacoco-it.exec</dataFile>
-              <outputDirectory>target/jacoco-it</outputDirectory>
-            </configuration>
-          </execution>
-          <execution>
-            <id>agent</id>
-            <goals>
-              <goal>prepare-agent</goal>
-            </goals>
-          </execution>
-          <execution>
-            <id>merge-results</id>
-            <phase>verify</phase>
-            <goals>
-              <goal>merge</goal>
-            </goals>
-            <configuration>
-              <fileSets>
-                <fileSet>
-                  <directory>target</directory>
-                  <includes>
-                    <include>*.exec</include>
-                  </includes>
-                </fileSet>
-              </fileSets>
-              <destFile>target/jacoco.exec</destFile>
-            </configuration>
           </execution>
           <execution>
             <id>post-merge-report</id>
