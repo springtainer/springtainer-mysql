@@ -6,6 +6,10 @@ on:
     branches:
       # Runs only on push to the master branch
       - master
+      # TEMPORARY: also release from this migration branch directly, to unblock the vectis-core/vectis-avides/test-support
+      # release bootstrap without merging the whole spring-boot-3-migration branch into master yet. Remove this line once
+      # the migration is merged to master.
+      - spring-boot-3-migration
 
 jobs:
   release:
