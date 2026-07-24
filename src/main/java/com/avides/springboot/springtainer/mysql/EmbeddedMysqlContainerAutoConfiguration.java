@@ -51,6 +51,7 @@ public class EmbeddedMysqlContainerAutoConfiguration
         {
             var envs = new ArrayList<String>();
             envs.add("MYSQL_ROOT_PASSWORD=" + properties.getRootPassword());
+            envs.add("MYSQL_INITDB_SKIP_TZINFO=1");
             return envs;
         }
 
@@ -87,31 +88,12 @@ public class EmbeddedMysqlContainerAutoConfiguration
             commands.add("--sync_binlog=0");
             commands.add("--innodb_flush_log_at_trx_commit=2");
             commands.add("--innodb_flush_method=O_DIRECT");
+            commands.add("--innodb-buffer-pool-size=128M");
+            commands.add("--performance-schema=OFF");
             // legacy support for mysql 8.X
             commands.add("--default-authentication-plugin=mysql_native_password");
             createContainerCmd.withCmd(commands);
         }
-
-        /**
-         * Skip ssl-key creation which reduces io and startup-time
-         * <p>
-         * Better solution: https://github.com/docker-library/mysql/pull/428
-         */
-        // @SneakyThrows
-        // @Override
-        // protected void adjustCreateCommand(CreateContainerCmd createContainerCmd)
-        // {
-        // File emptyFile = File.createTempFile("abc", "xyz");
-        // emptyFile.deleteOnExit();
-        //
-        // Set<PosixFilePermission> permissions = Files.getPosixFilePermissions(emptyFile.toPath());
-        // permissions.add(PosixFilePermission.OWNER_EXECUTE);
-        // permissions.add(PosixFilePermission.GROUP_EXECUTE);
-        // permissions.add(PosixFilePermission.OTHERS_EXECUTE);
-        // Files.setPosixFilePermissions(emptyFile.toPath(), permissions);
-        //
-        // createContainerCmd.withBinds(Bind.parse(emptyFile.getAbsolutePath() + ":/usr/bin/mysql_ssl_rsa_setup:ro"));
-        // }
 
         @SneakyThrows
         @Override
