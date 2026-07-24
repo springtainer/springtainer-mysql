@@ -12,7 +12,7 @@
 <dependency>
   <groupId>com.avides.springboot.springtainer</groupId>
   <artifactId>springtainer-mysql</artifactId>
-  <version>2.0.0-RC4</version>
+  <version>2.0.0</version>
   <scope>test</scope>
 </dependency>
 ```
