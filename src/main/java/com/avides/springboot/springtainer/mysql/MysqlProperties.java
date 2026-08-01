@@ -26,6 +26,6 @@ public class MysqlProperties extends AbstractEmbeddedContainerProperties
 
     public MysqlProperties()
     {
-        setDockerImage("mysql:8.0.46");
+        setDockerImage("mysql:8.4.11");
     }
 }

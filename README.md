@@ -23,7 +23,7 @@ Properties consumed (in `bootstrap.properties`):
 
 - `embedded.container.mysql.enabled` (default is `true`)
 - `embedded.container.mysql.startup-timeout` (default is `30`)
-- `embedded.container.mysql.docker-image` (default is `mysql:8.0.46`)
+- `embedded.container.mysql.docker-image` (default is `mysql:8.4.11`)
 - `embedded.container.mysql.port` (default is `3306`)
 - `embedded.container.mysql.root-password` (default is `root`)
 - `embedded.container.mysql.database-name` (default is `embeddedMySqlDb`)

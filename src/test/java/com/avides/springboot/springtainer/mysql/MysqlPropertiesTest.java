@@ -13,7 +13,7 @@ public class MysqlPropertiesTest
         var properties = new MysqlProperties();
         assertTrue(properties.isEnabled());
         assertEquals(30, properties.getStartupTimeout());
-        assertEquals("mysql:8.0.46", properties.getDockerImage());
+        assertEquals("mysql:8.4.11", properties.getDockerImage());
 
         assertEquals(3306, properties.getPort());
         assertEquals("root", properties.getRootPassword());
