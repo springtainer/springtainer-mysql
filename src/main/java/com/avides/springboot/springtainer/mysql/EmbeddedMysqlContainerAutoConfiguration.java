@@ -41,6 +41,13 @@ public class EmbeddedMysqlContainerAutoConfiguration
 
     public static class MysqlContainer extends AbstractBuildingEmbeddedContainer<MysqlProperties>
     {
+        /**
+         * allowPublicKeyRetrieval is required because MySQL authenticates with caching_sha2_password since 8.0 and the container speaks plain text: without
+         * it the driver refuses the key exchange with "Public Key Retrieval is not allowed". Forcing mysql_native_password instead is no longer an option,
+         * the server dropped --default-authentication-plugin in 8.4.
+         */
+        private static final String JDBC_PARAMETERS = "?verifyServerCertificate=false&useSSL=false&allowPublicKeyRetrieval=true";
+
         public MysqlContainer(String service, ConfigurableEnvironment environment, MysqlProperties properties)
         {
             super(service, environment, properties);
@@ -65,7 +72,7 @@ public class EmbeddedMysqlContainerAutoConfiguration
         protected Map<String, Object> providedProperties()
         {
             var provided = new HashMap<String, Object>();
-            var jdbcUrl = generateSqlConnectionUrl(properties, "jdbc") + properties.getDatabaseName() + "?verifyServerCertificate=false&useSSL=false";
+            var jdbcUrl = generateSqlConnectionUrl(properties, "jdbc") + properties.getDatabaseName() + JDBC_PARAMETERS;
             provided.put("embedded.container.mysql.url", jdbcUrl);
             provided.put("embedded.container.mysql.jdbc-url", jdbcUrl);
             provided.put("embedded.container.mysql.r2dbc-url", generateSqlConnectionUrl(properties, "r2dbc") + properties
@@ -90,8 +97,6 @@ public class EmbeddedMysqlContainerAutoConfiguration
             commands.add("--innodb_flush_method=O_DIRECT");
             commands.add("--innodb-buffer-pool-size=128M");
             commands.add("--performance-schema=OFF");
-            // legacy support for mysql 8.X
-            commands.add("--default-authentication-plugin=mysql_native_password");
             createContainerCmd.withCmd(commands);
         }
 
@@ -123,7 +128,7 @@ public class EmbeddedMysqlContainerAutoConfiguration
         private Connection createSqlConnection(MysqlProperties mysqlProperties) throws SQLException
         {
             return DriverManager
-                    .getConnection(generateSqlConnectionUrl(mysqlProperties, "jdbc") + "?verifyServerCertificate=false&useSSL=false&user=root&password=" + mysqlProperties
+                    .getConnection(generateSqlConnectionUrl(mysqlProperties, "jdbc") + JDBC_PARAMETERS + "&user=root&password=" + mysqlProperties
                             .getRootPassword());
         }
     }
